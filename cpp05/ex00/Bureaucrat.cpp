@@ -1,11 +1,11 @@
-// Implementação dos métodos da classe Bureaucrat
+// Implementação dos métodos da classe Bureaucrat (ex02)
 #include "Bureaucrat.hpp"
 
-// Construtor padrão: inicializa com nome "Default" e nota 150 (menor hierarquia)
+// Construtor padrão: nome "Default", nota 150 (menor hierarquia)
 Bureaucrat::Bureaucrat() : _name("Default"), _grade(150) {
 
 }
-// Construtor de cópia: copia nome e nota de outro burocrata
+// Construtor de cópia: copia nome e nota
 Bureaucrat::Bureaucrat(const Bureaucrat& other) : _name(other._name), _grade(other._grade) {
 
 }
@@ -14,7 +14,7 @@ Bureaucrat::Bureaucrat(const Bureaucrat& other) : _name(other._name), _grade(oth
 Bureaucrat::~Bureaucrat() {
 }
 
-// Operador de atribuição: copia apenas a nota (nome é constante e não pode ser alterado)
+// Operador de atribuição: copia apenas a nota (nome é constante)
 Bureaucrat& Bureaucrat::operator=(const Bureaucrat& other) {
     if (this != &other) {
         this->_grade = other.getGrade();
@@ -22,7 +22,7 @@ Bureaucrat& Bureaucrat::operator=(const Bureaucrat& other) {
     return *this;
 }
 
-// Construtor parametrizado: define nome e valida a nota (1 = maior hierarquia, 150 = menor)
+// Construtor parametrizado: valida se a nota está entre 1 e 150
 Bureaucrat::Bureaucrat(const std::string& name, int grade) : _name(name) {
     if (grade < 1)
         throw GradeTooHighException();
@@ -31,44 +31,44 @@ Bureaucrat::Bureaucrat(const std::string& name, int grade) : _name(name) {
     this->_grade = grade;
 }
 
-// Retorna o nome do burocrata (atributo const, não pode ser alterado)
+// Retorna o nome (atributo constante)
 std::string Bureaucrat::getName() const {
     return (this->_name);
 }
 
-// Retorna a nota atual do burocrata
+// Retorna a nota atual
 int	Bureaucrat::getGrade() const {
     return (this->_grade);
 }
 
-// Retorna mensagem de erro: nota muito alta (valor menor que 1)
+// Retorna mensagem: nota muito alta (menor que 1)
 const char* Bureaucrat::GradeTooHighException::what() const throw() {
     return "Grade is too high!";
 }
 
-// Retorna mensagem de erro: nota muito baixa (valor maior que 150)
+// Retorna mensagem: nota muito baixa (maior que 150)
 const char* Bureaucrat::GradeTooLowException::what() const throw() {
     return "Grade is too low!";
 }
 
-// Incrementa a nota (diminui o número, ex: 2 -> 1, sobe na hierarquia)
-// Nota: 1 é a maior hierarquia possível
+// Sobe na hierarquia: decrementa a nota (ex: 2 -> 1)
 void Bureaucrat::incrementGrade() {
     if (_grade - 1 < 1)
         throw GradeTooHighException();
     _grade--;
 }
 
-// Decrementa a nota (aumenta o número, ex: 2 -> 3, desce na hierarquia)
-// Nota: 150 é a menor hierarquia possível
+// Desce na hierarquia: incrementa a nota (ex: 2 -> 3)
+// CORRIGIDO: a condição original (_grade - 1 > 150) nunca era verdadeira
+// e lançava a exceção errada (GradeTooHighException em vez de GradeTooLowException).
 void Bureaucrat::decrementGrade() {
-    if (_grade - 1 > 150)
-        throw GradeTooHighException();
+    if (_grade + 1 > 150)
+        throw GradeTooLowException();
     _grade++;
 }
 
-// Sobrecarga do operador << para imprimir os dados do burocrata na tela
+// Sobrecarga do operador << para impressão
 std::ostream &operator<<(std::ostream &os, const Bureaucrat &b) {
-    os << "Name: " << b.getName() << "Grade: " << b.getGrade() << std::endl;
+    os << b.getName() << ", bureaucrat grade " << b.getGrade() << "." << std::endl;
     return (os);
 }

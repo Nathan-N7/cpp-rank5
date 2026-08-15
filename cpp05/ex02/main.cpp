@@ -1,17 +1,37 @@
 #include "Bureaucrat.hpp"
+#include "ShrubberyCreationForm.hpp"
+#include "RobotomyRequestForm.hpp"
+#include "PresidentialPardonForm.hpp"
+#include <cstdlib>
+#include <ctime>
 
 int main() {
-    try {
-        // Cria burocrata Bob com nota 2 (alta hierarquia)
-        Bureaucrat b("Bob", 2);
-        // Sobe para nota 1 (máxima hierarquia)
-        b.incrementGrade();
-        std::cout << "valor: " << b.getGrade() << std::endl;
-        // Tenta subir novamente (deve lançar Grade is too high!)
-        b.incrementGrade();
-    }
-    catch (std::exception& e) {
-        // Captura e imprime o erro
-        std::cout << e.what() << std::endl;
-    }
+    std::srand(static_cast<unsigned int>(std::time(NULL)));
+
+    Bureaucrat boss("Boss", 1);      // hierarquia máxima, consegue tudo
+    Bureaucrat intern("Intern", 150); // hierarquia mínima, não consegue nada
+
+    ShrubberyCreationForm shrub("home");
+    RobotomyRequestForm robot("Bender");
+    PresidentialPardonForm pardon("Fry");
+
+    std::cout << "=== Estagiario tentando (deve falhar) ===" << std::endl;
+    intern.signForm(shrub);
+    intern.executeForm(shrub);
+
+    std::cout << "\n=== Chefao assinando e executando tudo ===" << std::endl;
+    boss.signForm(shrub);
+    boss.executeForm(shrub);
+
+    boss.signForm(robot);
+    boss.executeForm(robot);
+
+    boss.signForm(pardon);
+    boss.executeForm(pardon);
+
+    std::cout << "\n=== Executando sem assinar (deve falhar) ===" << std::endl;
+    PresidentialPardonForm unsignedPardon("Leela");
+    boss.executeForm(unsignedPardon);
+
+    return 0;
 }

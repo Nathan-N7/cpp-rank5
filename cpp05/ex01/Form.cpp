@@ -42,8 +42,9 @@ void Form::beSigned(const Bureaucrat &b) {
 }
 
 // Retorna o nome do formulário (atributo const)
+// CORRIGIDO: estava "Form(_name);" sem return, o que nem compilava com -Werror.
 std::string Form::getName() const {
-    Form(_name);
+    return (_name);
 }
 
 // Retorna se o formulário foi assinado
@@ -75,6 +76,7 @@ const char *Form::GradeTooLowException::what() const throw()
 
 // Sobrecarga do operador << para imprimir os dados do formulário
 std::ostream &operator<<(std::ostream &os, const Form &f) {
-	os << "Name: " << f.getName() << " isSigned: " << f.getIsSigned() << " SignGrade: " << f.getSignGrade() << " ExecuteGrade: " << f.getExecuteGrade() << std::endl;
+	os << "Form: " << f.getName() << ", signed: " << (f.getIsSigned() ? "yes" : "no")
+	   << ", sign grade: " << f.getSignGrade() << ", exec grade: " << f.getExecuteGrade();
 	return (os);
 }

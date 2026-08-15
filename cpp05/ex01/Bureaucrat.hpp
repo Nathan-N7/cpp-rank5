@@ -1,5 +1,5 @@
 // Bureaucrat.hpp - Define a classe Bureaucrat (burocrata)
-// O burocrata tem um nome constante e uma nota de 1 (maior) a 150 (menor)
+// Burocrata com nome constante e nota de 1 (mais importante) a 150 (menos importante)
 #ifndef BUREAUCRAT_HPP
 #define BUREAUCRAT_HPP
 
@@ -7,44 +7,49 @@
 #include <string>
 #include <exception>
 
+// Forward declaration: evita include cruzado com Form.hpp
+class Form;
+
 class Bureaucrat {
 	private:
-		// Nome do burocrata (constante, não pode ser alterado)
+		// Nome do burocrata (constante, não muda após criação)
 		const std::string _name;
 		// Nota do burocrata (1 = maior hierarquia, 150 = menor)
 		int	_grade;
 	public:
 		// Construtor padrão: nome "Default", nota 150
 		Bureaucrat();
-		// Construtor parametrizado: define nome e nota
+		// Construtor parametrizado: define nome e nota (valida entre 1 e 150)
 		Bureaucrat(const std::string& name, int grade);
 		// Construtor de cópia
 		Bureaucrat(const Bureaucrat& other);
 		// Destrutor
 		~Bureaucrat();
-		// Operador de atribuição (copia apenas a nota)
+		// Operador de atribuição (copia apenas a nota, nome é const)
 		Bureaucrat &operator=(const Bureaucrat& other);
 		// Retorna o nome
 		std::string getName() const;
 		// Retorna a nota
 		int	getGrade() const;
-		// Exceção: nota muito alta (menor que 1)
+		// Exceção: nota muito alta (tentativa de definir nota < 1)
 		class GradeTooHighException : public std::exception {
 			public:
 				virtual const char* what() const throw();
 		};
-		// Exceção: nota muito baixa (maior que 150)
+		// Exceção: nota muito baixa (tentativa de definir nota > 150)
 		class GradeTooLowException : public std::exception {
 			public:
 				virtual const char* what() const throw();
 		};
-		// Sobe na hierarquia (diminui a nota em 1)
+		// Sobe na hierarquia: decrementa a nota (ex: 2 -> 1)
 		void incrementGrade();
-		// Desce na hierarquia (aumenta a nota em 1)
+		// Desce na hierarquia: incrementa a nota (ex: 2 -> 3)
 		void decrementGrade();
+		// Tenta assinar um formulário; imprime sucesso ou o motivo da falha
+		void signForm(Form &form);
 };
 
-// Sobrecarga do operador << para impressão
+// Sobrecarga do operador << para impressão dos dados
 std::ostream &operator<<(std::ostream &os, const Bureaucrat &b);
 
 #endif

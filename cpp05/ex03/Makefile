@@ -1,7 +1,8 @@
-NAME = form
+NAME = intern
 CC = c++
 FLAGS = -Wall -Wextra -Werror -std=c++98
-SRCS = Bureaucrat.cpp Form.cpp main.cpp
+SRCS = Bureaucrat.cpp AForm.cpp ShrubberyCreationForm.cpp RobotomyRequestForm.cpp \
+       PresidentialPardonForm.cpp Intern.cpp main.cpp
 
 OBJS = $(SRCS:.cpp=.o)
 

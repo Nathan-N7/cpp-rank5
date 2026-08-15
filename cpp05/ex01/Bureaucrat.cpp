@@ -1,5 +1,6 @@
-// Implementação dos métodos da classe Bureaucrat
+// Implementação dos métodos da classe Bureaucrat (ex01)
 #include "Bureaucrat.hpp"
+#include "Form.hpp"
 
 // Construtor padrão: nome "Default", nota 150 (menor hierarquia)
 Bureaucrat::Bureaucrat() : _name("Default"), _grade(150) {
@@ -31,7 +32,7 @@ Bureaucrat::Bureaucrat(const std::string& name, int grade) : _name(name) {
     this->_grade = grade;
 }
 
-// Retorna o nome (atributo const)
+// Retorna o nome (atributo constante)
 std::string Bureaucrat::getName() const {
     return (this->_name);
 }
@@ -59,14 +60,29 @@ void Bureaucrat::incrementGrade() {
 }
 
 // Desce na hierarquia: incrementa a nota (ex: 2 -> 3)
+// CORRIGIDO: a condição original (_grade - 1 > 150) nunca era verdadeira
+// e lançava a exceção errada (GradeTooHighException em vez de GradeTooLowException).
 void Bureaucrat::decrementGrade() {
-    if (_grade - 1 > 150)
-        throw GradeTooHighException();
+    if (_grade + 1 > 150)
+        throw GradeTooLowException();
     _grade++;
+}
+
+// Tenta assinar o formulário chamando Form::beSigned().
+// Se conseguir, informa o sucesso; se falhar, informa o motivo (a exceção lançada).
+void Bureaucrat::signForm(Form &form) {
+    try {
+        form.beSigned(*this);
+        std::cout << this->_name << " signed " << form.getName() << std::endl;
+    }
+    catch (std::exception &e) {
+        std::cout << this->_name << " couldn't sign " << form.getName()
+                   << " because " << e.what() << std::endl;
+    }
 }
 
 // Sobrecarga do operador << para impressão
 std::ostream &operator<<(std::ostream &os, const Bureaucrat &b) {
-    os << "Name: " << b.getName() << "Grade: " << b.getGrade() << std::endl;
+    os << b.getName() << ", bureaucrat grade " << b.getGrade() << "." << std::endl;
     return (os);
 }
